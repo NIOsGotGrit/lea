@@ -4,11 +4,11 @@ import { MessageInput } from './MessageInput';
 
 export const ChatWindow: React.FC = () => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', flexGrow: 1 }}> {/* Ensure it fills chatPanelArea */}
-      <div style={{ flexGrow: 1, overflowY: 'auto', border: '1px solid #ddd', marginBottom: '10px', padding: '5px' }}>
+    <div className="chat-window">
+      <div className="message-list-container">
         <MessageList />
       </div>
-      <div>
+      <div className="message-input-container">
         <MessageInput />
       </div>
     </div>

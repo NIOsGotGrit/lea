@@ -9,6 +9,7 @@ import {
   injectIntl,
 } from 'react-intl';
 import injectSheet, { type WithStylesProps } from 'react-jss';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 import { mdiFlash, mdiPowerPlug } from '@mdi/js';
 import { Outlet } from 'react-router-dom';
@@ -28,7 +29,7 @@ import Icon from '../ui/icon';
 
 import LockedScreen from '../../containers/auth/LockedScreen';
 import type SettingsStore from '../../stores/SettingsStore';
-import UIStore from '../../stores/UIStore';
+// import UIStore from '../../stores/UIStore';
 
 const messages = defineMessages({
   servicesUpdated: {
@@ -108,10 +109,8 @@ const styles = (theme: any) => ({ // Use theme 'any' for now if drawer width typ
   },
   sidebarArea: {
     gridArea: 'sidebar',
-    overflowY: 'auto',
+    overflow: 'hidden',
     zIndex: 0, 
-    // Add potential background for consistency?
-    // backgroundColor: theme.sidebar?.background || theme.colorBgd,
   },
   mainArea: {
     gridArea: 'main',
@@ -137,6 +136,10 @@ const styles = (theme: any) => ({ // Use theme 'any' for now if drawer width typ
     backgroundColor: theme.chatPanel?.background || theme.colorBgd || '#eee', // Use theme or fallback
     borderLeft: `1px solid ${theme.colorDivider || '#ccc'}`, // Divider
     zIndex: 0, // Keep below title area
+  },
+  tooltip: {
+    zIndex: 9999, // High z-index to ensure it's above everything
+    position: 'relative',
   },
 });
 
@@ -218,15 +221,12 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
 
     return (
       <>
-        {/* Removed original window-draggable div */} 
         <ErrorBoundary>
-          {/* Use the new appGrid class */} 
           <div 
             className={classes.appGrid} 
-            // Apply the style object
             style={gridStyle}
           > 
-             {/* Render Title Area */} 
+            {/* Render Title Area */} 
             <div className={classes.titleArea}> 
               {/* Render original TitleBar/span logic inside title area? */} 
               {isWindows && !isFullScreen && (
@@ -322,8 +322,8 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
                   {services}
                   <Outlet />
                 </div>
-                {/* Render Todos at the end - Commented out for now */}
-                {/* <Todos /> */}
+                {/* Render Todos at the end of the main scrollable content */} 
+                <Todos /> 
               </div>
             </div>
             
@@ -333,6 +333,14 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
               {isAiChatVisible && chatView} 
             </div>
           </div>
+          {/* Add tooltip outside the grid */}
+          <ReactTooltip
+            id="tooltip-sidebar-button"
+            place="right"
+            variant="dark"
+            className={classes.tooltip}
+            style={{ height: 'auto', overflowY: 'unset' }}
+          />
         </ErrorBoundary>
       </>
     );

@@ -13,12 +13,15 @@ interface MessageListProps {
 
 export const MessageList: React.FC<MessageListProps> = ({ messages = [] }) => {
   return (
-    <div style={{ padding: '10px' }}>
+    <div className="message-list">
       {messages.length === 0 ? (
-        <p><i>(Messages will appear here)</i></p>
+        <p className="no-messages-placeholder"><i>(Messages will appear here)</i></p>
       ) : (
         messages.map(msg => (
-          <div key={msg.id} style={{ marginBottom: '5px', wordBreak: 'break-word' }}>
+          <div
+            key={msg.id}
+            className={`message-item message-${msg.sender}`}
+          >
             <strong>{msg.sender === 'user' ? 'You' : 'AI'}:</strong> {msg.text}
           </div>
         ))

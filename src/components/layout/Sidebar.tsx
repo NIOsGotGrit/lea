@@ -359,14 +359,6 @@ class Sidebar extends Component<IProps, IState> {
             <Icon icon={mdiChatProcessingOutline} size={1.5} />
           </button>
         ) : null}
-        {this.state.tooltipEnabled && (
-          <ReactTooltip
-            id="tooltip-sidebar-button"
-            place="right"
-            variant="dark"
-            style={{ height: 'auto', overflowY: 'unset' }}
-          />
-        )}
 
         {!hideDownloadButton && !isMenuCollapsed ? (
           <button

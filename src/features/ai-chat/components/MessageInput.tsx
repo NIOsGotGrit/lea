@@ -26,16 +26,16 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => 
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="message-input">
       <input
         type="text"
         placeholder="Type your message..."
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        style={{ flexGrow: 1, marginRight: '5px', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+        className="message-input-field"
       />
-      <button onClick={handleSendClick} style={{ padding: '8px 15px' }}>
+      <button onClick={handleSendClick} className="message-send-button">
         Send
       </button>
     </div>

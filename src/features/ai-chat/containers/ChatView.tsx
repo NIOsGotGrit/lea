@@ -51,26 +51,16 @@ class ChatView extends React.Component<ChatViewProps> { // Change to class compo
     const { actions } = this.props; // Get actions from props (now correctly typed as optional)
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: '10px',
-          boxSizing: 'border-box',
-          backgroundColor: '#f9f9f9',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-          <h1 style={{ margin: 0, fontSize: '1.2em' }}>AI Chat Assistant</h1>
+      <div className="chat-view-container">
+        <div className="chat-view-header">
+          <h1 className="chat-view-title">AI Chat Assistant</h1>
           <button
             onClick={() => actions?.ui.toggleAiChat()} // Use optional chaining
-            style={{ background: 'none', border: 'none', fontSize: '1.2em', cursor: 'pointer' }}
+            className="chat-view-close-button"
           >
             &times;
           </button>
         </div>
-        {/* ChatWindow needs adapting if it needs messages/handlers, or keep state internal for now */}
         <ChatWindow /> 
       </div>
     );
