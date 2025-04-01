@@ -227,9 +227,13 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
     return (
       <ErrorBoundary>
         <div className={classes.appGrid} style={gridStyle}>
-          {/* Render Title Area */}
-          <div className={classes.titleArea}>
+          {/* Render Title Area - Conditionally set height */}
+          <div
+            className={classes.titleArea}
+            style={{ height: isFullScreen ? '0px' : '28px' }} // Set height conditionally
+          >
             {/* Render original TitleBar/span logic inside title area? */}
+            {/* This content will now be hidden along with the container in fullscreen */}
             {isWindows && !isFullScreen && (
               <TitleBar
                 menu={window['ferdium'].menu.template}
