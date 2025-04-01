@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { inject, observer } from 'mobx-react'; // Import inject and observer
 import { ChatWindow } from '../components/ChatWindow';
 // Fix the import path for StoresProps
-import type { StoresProps } from '../../../@types/ferdium-components.types'; 
+import type { StoresProps } from '../../../@types/ferdium-components.types';
 import type { RealStores } from '../../../stores'; // Import RealStores for type safety
 import type { Actions } from '../../../actions/lib/actions'; // Import Actions for type safety
 // MessageList and MessageInput are now rendered within ChatWindow
@@ -20,12 +20,13 @@ interface Message {
 // Make stores and actions optional as they are injected
 interface ChatViewProps /* extends StoresProps - remove this */ {
   stores?: RealStores; // Make optional
-  actions?: Actions;   // Make optional
+  actions?: Actions; // Make optional
 }
 
 @inject('stores', 'actions') // Inject stores and actions
 @observer // Make component reactive
-class ChatView extends React.Component<ChatViewProps> { // Change to class component for inject/observer
+class ChatView extends React.Component<ChatViewProps> {
+  // Change to class component for inject/observer
   // Basic state management for messages (will be replaced by IPC later)
   state = {
     messages: [
@@ -40,7 +41,8 @@ class ChatView extends React.Component<ChatViewProps> { // Change to class compo
       text,
       sender: 'user',
     };
-    this.setState((prevState: { messages: Message[] }) => ({ // Use React component state
+    this.setState((prevState: { messages: Message[] }) => ({
+      // Use React component state
       messages: [...prevState.messages, newMessage],
     }));
     // TODO: In Phase 2, this will call the IPC method
@@ -61,10 +63,10 @@ class ChatView extends React.Component<ChatViewProps> { // Change to class compo
             &times;
           </button>
         </div>
-        <ChatWindow /> 
+        <ChatWindow />
       </div>
     );
   }
 }
 
-export default ChatView; // Export the wrapped component 
+export default ChatView; // Export the wrapped component

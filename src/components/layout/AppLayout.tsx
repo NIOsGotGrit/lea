@@ -56,7 +56,8 @@ const messages = defineMessages({
 //   ? 'transform 0.5s ease'
 //   : 'none';
 
-const styles = (theme: any) => ({ // Use theme 'any' for now if drawer width type is complex
+const styles = (theme: any) => ({
+  // Use theme 'any' for now if drawer width type is complex
   /* Comment out original appContent style
   appContent: {
     // width: `calc(100% + ${theme.workspaces.drawer.width}px)`,
@@ -82,52 +83,56 @@ const styles = (theme: any) => ({ // Use theme 'any' for now if drawer width typ
     display: 'grid',
     height: '100vh',
     // Add chat column: Use CSS variable, default 0px
-    gridTemplateColumns: 'var(--drawer-width, 0px) auto 1fr var(--chat-width, 0px)', 
-    gridTemplateRows: 'auto 1fr', 
+    gridTemplateColumns:
+      'var(--drawer-width, 0px) auto 1fr var(--chat-width, 0px)',
+    gridTemplateRows: 'auto 1fr',
     gridTemplateAreas: `
       "title title title title"
       "drawer sidebar main chat"
     `,
     // Add transition for the column size change
-    transition: 'grid-template-columns 0.3s ease-out', 
+    transition: 'grid-template-columns 0.3s ease-out',
   },
   titleArea: {
     gridArea: 'title',
-    height: '28px', 
-    WebkitAppRegion: 'drag', 
+    height: '28px',
+    WebkitAppRegion: 'drag',
     zIndex: 1,
     // Add a background color matching the theme maybe?
-    // backgroundColor: theme.colorBackground, 
+    // backgroundColor: theme.colorBackground,
   },
   // New area for the workspace drawer
   workspacesDrawerArea: {
     gridArea: 'drawer',
     overflow: 'hidden', // Hide content when width is 0
-    backgroundColor: theme.workspaces?.drawer?.background || theme.colorBgd || '#222', // Use theme color or fallback
+    backgroundColor:
+      theme.workspaces?.drawer?.background || theme.colorBgd || '#222', // Use theme color or fallback
     // borderRight: `1px solid ${theme.colorDivider || '#444'}`, // Add a divider border
     zIndex: 0, // Keep below title area
   },
   sidebarArea: {
     gridArea: 'sidebar',
     overflow: 'hidden',
-    zIndex: 0, 
+    zIndex: 0,
   },
   mainArea: {
     gridArea: 'main',
-    display: 'flex', 
+    display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden', 
+    overflow: 'hidden',
     zIndex: 0,
   },
-  mainAreaContent: { // Container for the actual scrollable content within mainArea
+  mainAreaContent: {
+    // Container for the actual scrollable content within mainArea
     flexGrow: 1,
     overflowY: 'auto', // Allow scrolling for infobars, services, outlet, todos
     display: 'flex', // Can use flex column here too
     flexDirection: 'column',
   },
-  serviceWebViewArea: { // Container specifically for services + outlet
-     flexGrow: 1, // Allow this area to grow within mainAreaContent's flex column
-     display: 'flex', 
+  serviceWebViewArea: {
+    // Container specifically for services + outlet
+    flexGrow: 1, // Allow this area to grow within mainAreaContent's flex column
+    display: 'flex',
   },
   // New area for the chat panel
   chatPanelArea: {
@@ -211,7 +216,7 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
     }
 
     // Get drawer state directly from the imported store
-    const isWorkspaceDrawerOpen = workspaceStore.isWorkspaceDrawerOpen;
+    const { isWorkspaceDrawerOpen } = workspaceStore;
 
     // Define the style object separately
     const gridStyle: React.CSSProperties & { [key: string]: any } = {
@@ -220,133 +225,121 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
     };
 
     return (
-      <>
-        <ErrorBoundary>
-          <div 
-            className={classes.appGrid} 
-            style={gridStyle}
-          > 
-            {/* Render Title Area */} 
-            <div className={classes.titleArea}> 
-              {/* Render original TitleBar/span logic inside title area? */} 
-              {isWindows && !isFullScreen && (
-                <TitleBar
-                  menu={window['ferdium'].menu.template}
-                  icon="assets/images/logo.svg"
-                />
+      <ErrorBoundary>
+        <div className={classes.appGrid} style={gridStyle}>
+          {/* Render Title Area */}
+          <div className={classes.titleArea}>
+            {/* Render original TitleBar/span logic inside title area? */}
+            {isWindows && !isFullScreen && (
+              <TitleBar
+                menu={window['ferdium'].menu.template}
+                icon="assets/images/logo.svg"
+              />
+            )}
+            {isMac && !isFullScreen && (
+              <span
+                onDoubleClick={toggleFullScreen} // Keep double click toggle
+                style={{ display: 'block', height: '100%' }} // Ensure span takes up area
+              />
+            )}
+          </div>
+
+          {/* Render Workspace Drawer in its area */}
+          <div className={classes.workspacesDrawerArea}>
+            {/* Render drawer content - always rendering might be smoother? Test conditional later if needed. */}
+            {workspacesDrawer}
+          </div>
+
+          {/* Render Sidebar in its area */}
+          <div className={classes.sidebarArea}>{sidebar}</div>
+
+          {/* Render Main Area */}
+          <div className={classes.mainArea}>
+            {/* Content inside main area, now wraps scrollable parts */}
+            <div className={classes.mainAreaContent}>
+              <WorkspaceSwitchingIndicator />
+              {!areRequiredRequestsSuccessful && showRequiredRequestsError && (
+                <InfoBar
+                  type="danger"
+                  ctaLabel="Try again"
+                  ctaLoading={areRequiredRequestsLoading}
+                  sticky
+                  onClick={retryRequiredRequests}
+                >
+                  <Icon icon={mdiFlash} />
+                  {intl.formatMessage(messages.requiredRequestsFailed)}
+                </InfoBar>
               )}
-              {isMac && !isFullScreen && (
-                <span
-                  onDoubleClick={toggleFullScreen} // Keep double click toggle
-                  style={{ display: 'block', height: '100%' }} // Ensure span takes up area
-                />
+              {authRequestFailed && (
+                <InfoBar
+                  type="danger"
+                  ctaLabel="Try again"
+                  ctaLoading={areRequiredRequestsLoading}
+                  sticky
+                  onClick={retryRequiredRequests}
+                >
+                  <Icon icon={mdiFlash} />
+                  {intl.formatMessage(messages.authRequestFailed)}
+                </InfoBar>
               )}
-            </div>
-
-            {/* Render Workspace Drawer in its area */} 
-            <div className={classes.workspacesDrawerArea}> 
-               {/* Render drawer content - always rendering might be smoother? Test conditional later if needed.*/} 
-               {workspacesDrawer}
-            </div>
-
-            {/* Render Sidebar in its area */} 
-            <div className={classes.sidebarArea}> 
-              {sidebar}
-            </div>
-
-            {/* Render Main Area */} 
-            <div className={classes.mainArea}> 
-               {/* Content inside main area, now wraps scrollable parts */} 
-              <div className={classes.mainAreaContent}>
-                <WorkspaceSwitchingIndicator />
-                {!areRequiredRequestsSuccessful &&
-                  showRequiredRequestsError && (
-                    <InfoBar
-                      type="danger"
-                      ctaLabel="Try again"
-                      ctaLoading={areRequiredRequestsLoading}
-                      sticky
-                      onClick={retryRequiredRequests}
-                    >
-                      <Icon icon={mdiFlash} />
-                      {intl.formatMessage(messages.requiredRequestsFailed)}
-                    </InfoBar>
-                  )}
-                {authRequestFailed && (
+              {automaticUpdates &&
+                showServicesUpdatedInfoBar &&
+                this.state.shouldShowServicesUpdatedInfoBar && (
                   <InfoBar
-                    type="danger"
-                    ctaLabel="Try again"
-                    ctaLoading={areRequiredRequestsLoading}
-                    sticky
-                    onClick={retryRequiredRequests}
+                    type="primary"
+                    ctaLabel={intl.formatMessage(messages.buttonReloadServices)}
+                    onClick={() => window.location.reload()}
+                    onHide={() => {
+                      this.setState({
+                        shouldShowServicesUpdatedInfoBar: false,
+                      });
+                    }}
                   >
-                    <Icon icon={mdiFlash} />
-                    {intl.formatMessage(messages.authRequestFailed)}
+                    <Icon icon={mdiPowerPlug} />
+                    {intl.formatMessage(messages.servicesUpdated)}
                   </InfoBar>
                 )}
-                {automaticUpdates &&
-                  showServicesUpdatedInfoBar &&
-                  this.state.shouldShowServicesUpdatedInfoBar && (
-                    <InfoBar
-                      type="primary"
-                      ctaLabel={intl.formatMessage(
-                        messages.buttonReloadServices,
-                      )}
-                      onClick={() => window.location.reload()}
-                      onHide={() => {
-                        this.setState({
-                          shouldShowServicesUpdatedInfoBar: false,
-                        });
-                      }}
-                    >
-                      <Icon icon={mdiPowerPlug} />
-                      {intl.formatMessage(messages.servicesUpdated)}
-                    </InfoBar>
-                  )}
-                {automaticUpdates &&
-                  (appUpdateIsDownloaded || isSnap) &&
-                  this.state.shouldShowAppUpdateInfoBar && (
-                    <AppUpdateInfoBar
-                      onInstallUpdate={installAppUpdate}
-                      updateVersionParsed={updateVersionParse(updateVersion)}
-                      onHide={() => {
-                        this.setState({ shouldShowAppUpdateInfoBar: false });
-                      }}
-                    />
-                  )}
-                <BasicAuth />
-                <QuickSwitch />
-                <PublishDebugInfo />
-                {/* Wrap services and outlet */} 
-                <div className={classes.serviceWebViewArea}>
-                  {services}
-                  <Outlet />
-                </div>
-                {/* Render Todos at the end of the main scrollable content */} 
-                <Todos /> 
+              {automaticUpdates &&
+                (appUpdateIsDownloaded || isSnap) &&
+                this.state.shouldShowAppUpdateInfoBar && (
+                  <AppUpdateInfoBar
+                    onInstallUpdate={installAppUpdate}
+                    updateVersionParsed={updateVersionParse(updateVersion)}
+                    onHide={() => {
+                      this.setState({ shouldShowAppUpdateInfoBar: false });
+                    }}
+                  />
+                )}
+              <BasicAuth />
+              <QuickSwitch />
+              <PublishDebugInfo />
+              {/* Wrap services and outlet */}
+              <div className={classes.serviceWebViewArea}>
+                {services}
+                <Outlet />
               </div>
-            </div>
-            
-            {/* Render Chat Panel in its area */} 
-            <div className={classes.chatPanelArea}> 
-              {/* Conditionally render content? Or let CSS hide via overflow? Let's render always for now. */} 
-              {isAiChatVisible && chatView} 
+              {/* Render Todos at the end of the main scrollable content */}
+              <Todos />
             </div>
           </div>
-          {/* Add tooltip outside the grid */}
-          <ReactTooltip
-            id="tooltip-sidebar-button"
-            place="right"
-            variant="dark"
-            className={classes.tooltip}
-            style={{ height: 'auto', overflowY: 'unset' }}
-          />
-        </ErrorBoundary>
-      </>
+
+          {/* Render Chat Panel in its area */}
+          <div className={classes.chatPanelArea}>
+            {/* Conditionally render content? Or let CSS hide via overflow? Let's render always for now. */}
+            {isAiChatVisible && chatView}
+          </div>
+        </div>
+        {/* Add tooltip outside the grid */}
+        <ReactTooltip
+          id="tooltip-sidebar-button"
+          place="right"
+          variant="dark"
+          className={classes.tooltip}
+          style={{ height: 'auto', overflowY: 'unset' }}
+        />
+      </ErrorBoundary>
     );
   }
 }
 
-export default injectIntl(
-  injectSheet(styles)(AppLayout),
-);
+export default injectIntl(injectSheet(styles)(AppLayout));

@@ -348,7 +348,7 @@ class Sidebar extends Component<IProps, IState> {
             <Icon icon={mdiLock} size={1.5} />
           </button>
         ) : null}
-        {!isMenuCollapsed ? (
+        {isMenuCollapsed ? null : (
           <button
             type="button"
             onClick={() => this.props.toggleAiChat()}
@@ -358,7 +358,7 @@ class Sidebar extends Component<IProps, IState> {
           >
             <Icon icon={mdiChatProcessingOutline} size={1.5} />
           </button>
-        ) : null}
+        )}
 
         {!hideDownloadButton && !isMenuCollapsed ? (
           <button

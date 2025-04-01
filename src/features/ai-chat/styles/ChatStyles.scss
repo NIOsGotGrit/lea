@@ -1,0 +1,178 @@
+// Modern styles for the AI Chat Feature
+
+// Variables (adjust colors as needed)
+$primary-bg: #1a1a1a; // Dark background
+$secondary-bg: #2a2a2a; // Slightly lighter dark for elements
+$primary-text: #e0e0e0; // Light text
+$secondary-text: #b0b0b0; // Dimmer text
+$accent-color: #4a90e2; // Accent color (e.g., buttons, user messages)
+$ai-message-bg: #333333; // Background for AI messages
+$border-color: #444444;
+$input-bg: #3a3a3a;
+
+// Mixins (optional, for reusable styles)
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Base Chat View Container
+.chat-view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; // Make sure it takes full height available
+  padding: 15px;
+  box-sizing: border-box;
+  background-color: $primary-bg;
+  color: $primary-text;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; // Modern font stack
+}
+
+// Chat Header
+.chat-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $border-color;
+
+  .chat-view-title {
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+
+  .chat-view-close-button {
+    background: none;
+    border: none;
+    font-size: 1.6em;
+    color: $secondary-text;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+
+    &:hover {
+      color: $primary-text;
+    }
+  }
+}
+
+// Chat Window (holds message list and input)
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; // Allows it to take remaining space
+  overflow: hidden; // Prevent container overflow
+}
+
+// Message List Container (Scrollable Area)
+.message-list-container {
+  flex-grow: 1;
+  overflow-y: auto; // Enable vertical scrolling
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: $secondary-bg;
+  border-radius: 8px;
+  border: 1px solid $border-color;
+}
+
+// Individual Messages
+.message-list {
+  padding: 5px;
+
+  .no-messages-placeholder {
+    color: $secondary-text;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .message-item {
+    margin-bottom: 12px;
+    padding: 10px 15px;
+    border-radius: 18px;
+    line-height: 1.4;
+    max-width: 80%;
+    word-break: break-word;
+
+    strong {
+      font-weight: 600;
+      margin-right: 5px; // Space after sender name
+    }
+
+    // AI Messages
+    &.message-ai {
+      background-color: $ai-message-bg;
+      color: $primary-text;
+      border-bottom-left-radius: 4px; // Different shape for distinction
+      align-self: flex-start;
+      margin-right: auto; // Push to left
+    }
+
+    // User Messages
+    &.message-user {
+      background-color: $accent-color;
+      color: white;
+      border-bottom-right-radius: 4px; // Different shape
+      align-self: flex-end;
+      margin-left: auto; // Push to right
+    }
+  }
+}
+
+// Message Input Area
+.message-input-container {
+  // Add padding or margin if needed
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: $secondary-bg;
+  border-radius: 8px;
+  border: 1px solid $border-color;
+
+  .message-input-field {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 10px 15px;
+    border: 1px solid $border-color;
+    border-radius: 20px; // Pill shape
+    background-color: $input-bg;
+    color: $primary-text;
+    font-size: 1em;
+
+    &::placeholder {
+      color: $secondary-text;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $accent-color;
+      box-shadow: 0 0 0 2px rgba($accent-color, 0.3);
+    }
+  }
+
+  .message-send-button {
+    padding: 10px 20px;
+    background-color: $accent-color;
+    color: white;
+    border: none;
+    border-radius: 20px; // Pill shape
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: darken($accent-color, 10%);
+    }
+
+    &:disabled {
+      background-color: lighten($accent-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+} 
