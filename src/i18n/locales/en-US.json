@@ -302,7 +302,7 @@
   "settings.app.restart.restartLater": "Restart later",
   "settings.app.restart.restartNow": "Restart now",
   "settings.app.restartRequired": "Changes require restart",
-  "settings.app.sandboxServicesInfo": "By default, Ferdium sandboxes all services, meaning that each service runs in its own isolated environment (recommended). This is a security feature that prevents services from accessing each other’s data. You can create custom sandboxes to group services together by adding a custom sandbox - this way, services can share data between them if they are in the same sandbox. You can also disable sandboxing entirely for all services - allowing them to access each other’s data (not recommended).",
+  "settings.app.sandboxServicesInfo": "By default, Ferdium sandboxes all services, meaning that each service runs in its own isolated environment (recommended). This is a security feature that prevents services from accessing each other's data. You can create custom sandboxes to group services together by adding a custom sandbox - this way, services can share data between them if they are in the same sandbox. You can also disable sandboxing entirely for all services - allowing them to access each other's data (not recommended).",
   "settings.app.scheduledDNDInfo": "Scheduled Do-not-Disturb allows you to define a period of time in which you do not want to get Notifications from Ferdium.",
   "settings.app.scheduledDNDTimeInfo": "Times in 24-Hour-Format. End time can be before start time (e.g. start 17:00, end 09:00) to enable Do-not-Disturb overnight.",
   "settings.app.sectionAccentColorSettings": "Accent Color Settings",
@@ -464,7 +464,7 @@
   "settings.workspaces.tryReloadWorkspaces": "Try again",
   "settings.workspaces.updatedInfo": "Your changes have been saved",
   "settings.workspaces.workspaceFeatureHeadline": "Less is More: Introducing Ferdium Workspaces",
-  "settings.workspaces.workspaceFeatureInfo": "Ferdium Workspaces let you focus on what’s important right now. Set up different sets of services and easily switch between them at any time. You decide which services you need when and where, so we can help you stay on top of your game - or easily switch off from work whenever you want.",
+  "settings.workspaces.workspaceFeatureInfo": "Ferdium Workspaces let you focus on what's important right now. Set up different sets of services and easily switch between them at any time. You decide which services you need when and where, so we can help you stay on top of your game - or easily switch off from work whenever you want.",
   "settings.workspaces.workspacesRequestFailed": "Could not load your workspaces",
   "setupAssistant.headline": "Let's get started",
   "setupAssistant.skip.label": "Skip",
@@ -521,7 +521,9 @@
   "workspaceDrawer.headline": "Workspaces",
   "workspaceDrawer.item.contextMenuEdit": "edit",
   "workspaceDrawer.item.noServicesAddedYet": "No services added yet",
-  "workspaceDrawer.workspaceFeatureInfo": "<p>Ferdium Workspaces let you focus on what’s important right now. Set up different sets of services and easily switch between them at any time.</p><p>You decide which services you need when and where, so we can help you stay on top of your game - or easily switch off from work whenever you want.</p>",
+  "workspaceDrawer.workspaceFeatureInfo": "<p>Ferdium Workspaces let you focus on what's important right now. Set up different sets of services and easily switch between them at any time.</p><p>You decide which services you need when and where, so we can help you stay on top of your game - or easily switch off from work whenever you want.</p>",
   "workspaceDrawer.workspacesSettingsTooltip": "Edit workspaces settings",
-  "workspaces.switchingIndicator.switchingTo": "Switching to"
+  "workspaces.switchingIndicator.switchingTo": "Switching to",
+  "sidebar.aiChatSettings": "AI Chat Settings",
+  "sidebar.lockFerdium": "Lock Ferdium"
 }

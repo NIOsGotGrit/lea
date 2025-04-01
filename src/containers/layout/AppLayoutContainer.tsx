@@ -16,6 +16,7 @@ import { DEFAULT_ACCENT_COLOR } from '../../config';
 import { workspaceStore } from '../../features/workspaces';
 import WorkspaceDrawer from '../../features/workspaces/components/WorkspaceDrawer';
 import { isValidColor } from '../../helpers/color-helpers';
+import ChatView from '../../features/ai-chat/containers/ChatView';
 
 interface IProps extends StoresProps {}
 
@@ -85,7 +86,7 @@ class AppLayoutContainer extends Component<IProps> {
     const { installUpdate, toggleMuteApp, toggleCollapseMenu } =
       this.props.actions.app;
 
-    const { openSettings, closeSettings, openDownloads } =
+    const { openSettings, closeSettings, openDownloads, toggleAiChat } =
       this.props.actions.ui;
 
     const isLoadingFeatures =
@@ -139,6 +140,7 @@ class AppLayoutContainer extends Component<IProps> {
         wakeUpService={awake}
         toggleMuteApp={toggleMuteApp}
         toggleCollapseMenu={toggleCollapseMenu}
+        toggleAiChat={toggleAiChat}
         toggleWorkspaceDrawer={
           this.props.actions.workspaces.toggleWorkspaceDrawer
         }
@@ -193,6 +195,8 @@ class AppLayoutContainer extends Component<IProps> {
             retryRequiredRequests={retryRequiredRequests}
             areRequiredRequestsLoading={requests.areRequiredRequestsLoading}
             updateVersion={app.updateVersion}
+            isAiChatVisible={ui.isAiChatVisible}
+            chatView={<ChatView />}
           >
             <Outlet />
           </AppLayout>

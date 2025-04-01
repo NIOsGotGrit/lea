@@ -11,6 +11,7 @@ import {
   mdiPlusBox,
   mdiViewGrid,
   mdiViewSplitVertical,
+  mdiChatProcessingOutline,
 } from '@mdi/js';
 import { inject, observer } from 'mobx-react';
 import { Component } from 'react';
@@ -76,6 +77,10 @@ const messages = defineMessages({
     id: 'sidebar.lockFerdium',
     defaultMessage: 'Lock Ferdium',
   },
+  aiChatSettings: {
+    id: 'sidebar.aiChatSettings',
+    defaultMessage: 'AI Chat Settings',
+  },
 });
 
 interface IProps extends WrappedComponentProps {
@@ -99,6 +104,7 @@ interface IProps extends WrappedComponentProps {
   openDownloads: (args: { path: string }) => void;
   // eslint-disable-next-line react/no-unused-prop-types
   closeSettings: () => void;
+  toggleAiChat: () => void;
   setActive: (args: { serviceId: string }) => void;
   reorder: (args: { oldIndex: number; newIndex: number }) => void;
   reload: (args: { serviceId: string }) => void;
@@ -340,6 +346,17 @@ class Sidebar extends Component<IProps, IState> {
             )} (${lockFerdiumShortcutKey(false)})`}
           >
             <Icon icon={mdiLock} size={1.5} />
+          </button>
+        ) : null}
+        {!isMenuCollapsed ? (
+          <button
+            type="button"
+            onClick={() => this.props.toggleAiChat()}
+            className="sidebar__button"
+            data-tooltip-id="tooltip-sidebar-button"
+            data-tooltip-content={intl.formatMessage(messages.aiChatSettings)}
+          >
+            <Icon icon={mdiChatProcessingOutline} size={1.5} />
           </button>
         ) : null}
         {this.state.tooltipEnabled && (

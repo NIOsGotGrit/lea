@@ -28,6 +28,7 @@ import Icon from '../ui/icon';
 
 import LockedScreen from '../../containers/auth/LockedScreen';
 import type SettingsStore from '../../stores/SettingsStore';
+import UIStore from '../../stores/UIStore';
 
 const messages = defineMessages({
   servicesUpdated: {
@@ -49,11 +50,13 @@ const messages = defineMessages({
   },
 });
 
-const transition = window?.matchMedia('(prefers-reduced-motion: no-preference)')
-  ? 'transform 0.5s ease'
-  : 'none';
+// Comment out original transition for now
+// const transition = window?.matchMedia('(prefers-reduced-motion: no-preference)')
+//   ? 'transform 0.5s ease'
+//   : 'none';
 
-const styles = (theme: { workspaces: { drawer: { width: any } } }) => ({
+const styles = (theme: any) => ({ // Use theme 'any' for now if drawer width type is complex
+  /* Comment out original appContent style
   appContent: {
     // width: `calc(100% + ${theme.workspaces.drawer.width}px)`,
     width: '100%',
@@ -64,6 +67,7 @@ const styles = (theme: { workspaces: { drawer: { width: any } } }) => ({
         : `translateX(-${theme.workspaces.drawer.width}px)`;
     },
   },
+  */
   titleBar: {
     display: 'block',
     zIndex: 1,
@@ -71,6 +75,68 @@ const styles = (theme: { workspaces: { drawer: { width: any } } }) => ({
     height: '10px',
     position: 'absolute',
     top: 0,
+  },
+  // New Grid Styles
+  appGrid: {
+    display: 'grid',
+    height: '100vh',
+    // Add chat column: Use CSS variable, default 0px
+    gridTemplateColumns: 'var(--drawer-width, 0px) auto 1fr var(--chat-width, 0px)', 
+    gridTemplateRows: 'auto 1fr', 
+    gridTemplateAreas: `
+      "title title title title"
+      "drawer sidebar main chat"
+    `,
+    // Add transition for the column size change
+    transition: 'grid-template-columns 0.3s ease-out', 
+  },
+  titleArea: {
+    gridArea: 'title',
+    height: '28px', 
+    WebkitAppRegion: 'drag', 
+    zIndex: 1,
+    // Add a background color matching the theme maybe?
+    // backgroundColor: theme.colorBackground, 
+  },
+  // New area for the workspace drawer
+  workspacesDrawerArea: {
+    gridArea: 'drawer',
+    overflow: 'hidden', // Hide content when width is 0
+    backgroundColor: theme.workspaces?.drawer?.background || theme.colorBgd || '#222', // Use theme color or fallback
+    // borderRight: `1px solid ${theme.colorDivider || '#444'}`, // Add a divider border
+    zIndex: 0, // Keep below title area
+  },
+  sidebarArea: {
+    gridArea: 'sidebar',
+    overflowY: 'auto',
+    zIndex: 0, 
+    // Add potential background for consistency?
+    // backgroundColor: theme.sidebar?.background || theme.colorBgd,
+  },
+  mainArea: {
+    gridArea: 'main',
+    display: 'flex', 
+    flexDirection: 'column',
+    overflow: 'hidden', 
+    zIndex: 0,
+  },
+  mainAreaContent: { // Container for the actual scrollable content within mainArea
+    flexGrow: 1,
+    overflowY: 'auto', // Allow scrolling for infobars, services, outlet, todos
+    display: 'flex', // Can use flex column here too
+    flexDirection: 'column',
+  },
+  serviceWebViewArea: { // Container specifically for services + outlet
+     flexGrow: 1, // Allow this area to grow within mainAreaContent's flex column
+     display: 'flex', 
+  },
+  // New area for the chat panel
+  chatPanelArea: {
+    gridArea: 'chat',
+    overflow: 'hidden', // Hide content when width is 0
+    backgroundColor: theme.chatPanel?.background || theme.colorBgd || '#eee', // Use theme or fallback
+    borderLeft: `1px solid ${theme.colorDivider || '#ccc'}`, // Divider
+    zIndex: 0, // Keep below title area
   },
 });
 
@@ -85,6 +151,8 @@ interface IProps extends WrappedComponentProps, WithStylesProps<typeof styles> {
   sidebar: React.ReactElement;
   workspacesDrawer: React.ReactElement;
   services: React.ReactElement;
+  isAiChatVisible: boolean;
+  chatView: React.ReactElement;
   showServicesUpdatedInfoBar: boolean;
   appUpdateIsDownloaded: boolean;
   authRequestFailed: boolean;
@@ -118,6 +186,8 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
       workspacesDrawer,
       sidebar,
       services,
+      isAiChatVisible,
+      chatView,
       showServicesUpdatedInfoBar,
       appUpdateIsDownloaded,
       authRequestFailed,
@@ -137,27 +207,57 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
       return <LockedScreen />;
     }
 
+    // Get drawer state directly from the imported store
+    const isWorkspaceDrawerOpen = workspaceStore.isWorkspaceDrawerOpen;
+
+    // Define the style object separately
+    const gridStyle: React.CSSProperties & { [key: string]: any } = {
+      '--drawer-width': isWorkspaceDrawerOpen ? '250px' : '0px',
+      '--chat-width': isAiChatVisible ? '350px' : '0px',
+    };
+
     return (
       <>
-        {isMac && !isFullScreen && <div className="window-draggable" />}
+        {/* Removed original window-draggable div */} 
         <ErrorBoundary>
-          <div className="app">
-            {isWindows && !isFullScreen && (
-              <TitleBar
-                menu={window['ferdium'].menu.template}
-                icon="assets/images/logo.svg"
-              />
-            )}
-            {isMac && !isFullScreen && (
-              <span
-                onDoubleClick={toggleFullScreen}
-                className={classes.titleBar}
-              />
-            )}
-            <div className={`app__content ${classes.appContent}`}>
-              {workspacesDrawer}
+          {/* Use the new appGrid class */} 
+          <div 
+            className={classes.appGrid} 
+            // Apply the style object
+            style={gridStyle}
+          > 
+             {/* Render Title Area */} 
+            <div className={classes.titleArea}> 
+              {/* Render original TitleBar/span logic inside title area? */} 
+              {isWindows && !isFullScreen && (
+                <TitleBar
+                  menu={window['ferdium'].menu.template}
+                  icon="assets/images/logo.svg"
+                />
+              )}
+              {isMac && !isFullScreen && (
+                <span
+                  onDoubleClick={toggleFullScreen} // Keep double click toggle
+                  style={{ display: 'block', height: '100%' }} // Ensure span takes up area
+                />
+              )}
+            </div>
+
+            {/* Render Workspace Drawer in its area */} 
+            <div className={classes.workspacesDrawerArea}> 
+               {/* Render drawer content - always rendering might be smoother? Test conditional later if needed.*/} 
+               {workspacesDrawer}
+            </div>
+
+            {/* Render Sidebar in its area */} 
+            <div className={classes.sidebarArea}> 
               {sidebar}
-              <div className="app__service">
+            </div>
+
+            {/* Render Main Area */} 
+            <div className={classes.mainArea}> 
+               {/* Content inside main area, now wraps scrollable parts */} 
+              <div className={classes.mainAreaContent}>
                 <WorkspaceSwitchingIndicator />
                 {!areRequiredRequestsSuccessful &&
                   showRequiredRequestsError && (
@@ -217,10 +317,20 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
                 <BasicAuth />
                 <QuickSwitch />
                 <PublishDebugInfo />
-                {services}
-                <Outlet />
+                {/* Wrap services and outlet */} 
+                <div className={classes.serviceWebViewArea}>
+                  {services}
+                  <Outlet />
+                </div>
+                {/* Render Todos at the end - Commented out for now */}
+                {/* <Todos /> */}
               </div>
-              <Todos />
+            </div>
+            
+            {/* Render Chat Panel in its area */} 
+            <div className={classes.chatPanelArea}> 
+              {/* Conditionally render content? Or let CSS hide via overflow? Let's render always for now. */} 
+              {isAiChatVisible && chatView} 
             </div>
           </div>
         </ErrorBoundary>
@@ -230,5 +340,5 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
 }
 
 export default injectIntl(
-  injectSheet(styles, { injectTheme: true })(AppLayout),
+  injectSheet(styles)(AppLayout),
 );

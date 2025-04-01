@@ -12,6 +12,9 @@ export default class UIStore extends TypedStore {
 
   @observable isOsDarkThemeActive = nativeTheme.shouldUseDarkColors;
 
+  // Added state for AI Chat visibility
+  @observable isAiChatVisible = false;
+
   constructor(stores: Stores, api: ApiInterface, actions: Actions) {
     super(stores, api, actions);
 
@@ -24,6 +27,8 @@ export default class UIStore extends TypedStore {
     this.actions.ui.toggleServiceUpdatedInfoBar.listen(
       this._toggleServiceUpdatedInfoBar.bind(this),
     );
+    // Register listener for the new action (implementation below)
+    this.actions.ui.toggleAiChat.listen(this._toggleAiChat.bind(this));
 
     // Listen for theme change
     nativeTheme.on('updated', () => {
@@ -119,6 +124,12 @@ export default class UIStore extends TypedStore {
       visibility = !this.showServicesUpdatedInfoBar;
     }
     this.showServicesUpdatedInfoBar = visibility;
+  }
+
+  // Action implementation for toggling AI Chat visibility
+  @action _toggleAiChat(): void {
+    this.isAiChatVisible = !this.isAiChatVisible;
+    console.log('AI Chat Visible:', this.isAiChatVisible); // For debugging
   }
 
   // Reactions
